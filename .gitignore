@@ -62,3 +62,6 @@ flower_data.tar
 
 # flowers data set folder
 flowers/
+
+# folder with files to upload to workspace
+upload/
