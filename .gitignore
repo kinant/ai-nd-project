@@ -59,6 +59,7 @@ target/
 
 # Flower data set file
 flower_data.tar
+flower_data.tar.gz
 
 # flowers data set folder
 flowers/
