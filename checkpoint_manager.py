@@ -19,8 +19,9 @@ def save_model(model, num_classes, dataset_idx, c_arch, hidden_units,
                   'model_state_dict': m_state_dict,
                   'class_to_idx': model.class_to_idx}
     
-    # create the directory:
-    os.mkdir(path)
+    # create the directory (first check that it does not exist):
+    if not os.path.exists(path):
+        os.mkdir(path)
 
     torch.save(checkpoint, path + '/' + 'checkpoint.pth')
     print('Model saved!')
