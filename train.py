@@ -31,8 +31,6 @@ def main():
     mean = [0.485, 0.456, 0.406]
     std = [0.229, 0.224, 0.225]
     img_px = 224
-    cat_to_name = None
-    label_m_file = 'cat_to_name.json'
     num_classes = None
 
     in_args = get_input_args()
@@ -54,9 +52,6 @@ def main():
     # print("Data transforms: ", data_transforms)
     # print("Image_datasets: ", image_datasets)
     # print("dataloaders: ", dataloaders)
-
-    cat_to_name = get_label_mapping(label_m_file)
-    # print("Label Mapping: ", cat_to_name)
 
     # Initialize the model:
     _, _, num_classes = dl.get_data_info(image_datasets)
@@ -82,12 +77,6 @@ def main():
 
     cm.save_model(model_ft, num_classes, image_datasets['train'].class_to_idx, c_arch, 
         c_hidden_units, c_learning_rate, dropout, c_save_dir)
-
-def get_label_mapping(filename):
-    with open('cat_to_name.json', 'r') as f:
-        cat_to_name = json.load(f)
-    
-    return cat_to_name
 
 def train_model(arch, model, device, dataloaders, criterion, optimizer, num_epochs=25):
     

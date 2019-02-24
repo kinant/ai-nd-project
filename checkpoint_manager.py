@@ -39,6 +39,6 @@ def load_checkpoint(path):
     model.load_state_dict(checkpoint['model_state_dict'])
     model.class_idx = checkpoint['class_to_idx']  
     
-    print("Model Loaded: ", model)
+    # print("Model Loaded: ", model)
 
     return model

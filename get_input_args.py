@@ -35,3 +35,29 @@ def get_input_args():
         True, help = 'use gpu for training')
 
     return parser.parse_args()
+
+def get_input_args_predict():
+    # Create Parse using Argument Parser
+    parser = argparse.ArgumentParser()
+
+    # Create the required command line arguments:
+    # 1. path to image
+    # 2. checkpoint location
+    # 3. top K most likely classes
+    # 4. mapping of categories to real names
+    # 5. use gpu for inference
+
+    parser.add_argument('img_path', type = str, help = 'image path required')
+
+    parser.add_argument('checkpoint', type = str, help = 'checkpoint path required')
+
+    parser.add_argument('--top_k', type = int, default = 
+        1, help = 'Top K most likely classes')
+
+    parser.add_argument('--category_names', type = str, default = 
+        'cat_to_name.json', help = 'File for mapping of categories to real names')
+
+    parser.add_argument('--gpu', type = bool, default = 
+        False, help = 'use gpu for inference')
+
+    return parser.parse_args()
