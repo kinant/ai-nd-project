@@ -31,8 +31,8 @@ def get_input_args():
     parser.add_argument('--epochs', type = int, default = 
         14, help = 'number of epochs for training')
     
-    parser.add_argument('--gpu', type = bool, default = 
-        True, help = 'use gpu for training')
+    # https://stackoverflow.com/questions/5262702/argparse-module-how-to-add-option-without-any-argument
+    parser.add_argument('-g','--gpu', action ='store_true')
 
     return parser.parse_args()
 
@@ -57,7 +57,6 @@ def get_input_args_predict():
     parser.add_argument('--category_names', type = str, default = 
         'cat_to_name.json', help = 'File for mapping of categories to real names')
 
-    parser.add_argument('--gpu', type = bool, default = 
-        False, help = 'use gpu for inference')
+    parser.add_argument('-g','--gpu', action ='store_true')
 
     return parser.parse_args()
