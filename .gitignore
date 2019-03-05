@@ -71,3 +71,10 @@ upload/
 checkpoint.pth
 
 *.pth
+
+# test notebooks
+test1.ipynb
+test2.ipynb
+\.ipynb_checkpoints/test1-checkpoint\.ipynb
+
+\.ipynb_checkpoints/test2-checkpoint\.ipynb
