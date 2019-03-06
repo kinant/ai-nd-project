@@ -6,7 +6,7 @@ import torch
 import json
 from PIL import Image
 
-def label_mapping(filename):
+def open_label_mapping_file(filename):
     cat_to_name = None
     
     with open('cat_to_name.json', 'r') as f:

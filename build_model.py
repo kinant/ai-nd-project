@@ -30,19 +30,18 @@ def setup_criterion_optim(model_ft, device, learning_rate):
     
     return criterion, optimizer
 
-def set_parameter_requires_grad(model, feature_extracting=True):
-    if feature_extracting:
-        for param in model.parameters():
-            param.requires_grad = False
+def set_parameter_requires_grad(model):
+    for param in model.parameters():
+        param.requires_grad = False
 
-def initialize_model(model_name, num_classes, hidden_units, c_drop, feature_extract=True, use_pretrained=True):
+def initialize_model(model_name, num_classes, hidden_units, c_drop):
 
     model_ft = None
 
     if model_name == "resnet":
 
-        model_ft = models.resnet50(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
+        model_ft = models.resnet50(pretrained=True)
+        set_parameter_requires_grad(model_ft)
 
         num_ftrs = model_ft.fc.in_features
         
@@ -56,11 +55,12 @@ def initialize_model(model_name, num_classes, hidden_units, c_drop, feature_extr
         
     elif model_name == "alexnet":
 
-        model_ft = models.alexnet(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        num_ftrs = model_ft.classifier[6].in_features
+        model_ft = models.alexnet(pretrained=True)
         
-        model_ft.classifier[6] = nn.Sequential(OrderedDict([
+        set_parameter_requires_grad(model_ft)
+        num_ftrs = model_ft.classifier[1].in_features
+        
+        model_ft.classifier = nn.Sequential(OrderedDict([
                           ('fc1', nn.Linear(num_ftrs, hidden_units)),
                           ('drop', nn.Dropout(c_drop)),
                           ('relu', nn.ReLU()),
@@ -70,11 +70,11 @@ def initialize_model(model_name, num_classes, hidden_units, c_drop, feature_extr
         
     elif model_name == "vgg":
 
-        model_ft = models.vgg19(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        num_ftrs = model_ft.classifier[6].in_features
+        model_ft = models.vgg19(pretrained=True)
+        set_parameter_requires_grad(model_ft)
+        num_ftrs = model_ft.classifier[0].in_features
         
-        model_ft.classifier[6] = nn.Sequential(OrderedDict([
+        model_ft.classifier = nn.Sequential(OrderedDict([
                           ('fc1', nn.Linear(num_ftrs, hidden_units)),
                           ('drop', nn.Dropout(c_drop)),
                           ('relu', nn.ReLU()),
@@ -84,8 +84,8 @@ def initialize_model(model_name, num_classes, hidden_units, c_drop, feature_extr
         
     elif model_name == "densenet":
 
-        model_ft = models.densenet121(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
+        model_ft = models.densenet121(pretrained=True)
+        set_parameter_requires_grad(model_ft)
         num_ftrs = model_ft.classifier.in_features
         
         model_ft.classifier =  nn.Sequential(OrderedDict([
