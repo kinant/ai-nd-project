@@ -20,7 +20,7 @@ def get_input_args():
         None, help = 'path to save checkpoint')
     
     parser.add_argument('--arch', type = str, default = 
-        'resnet', help = 'CNN Model Architecture to use')
+        'vgg', help = 'CNN Model Architecture to use')
     
     parser.add_argument('--learning_rate', type = float, default = 
         0.001, help = 'training learning rate')

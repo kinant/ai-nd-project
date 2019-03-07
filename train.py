@@ -43,8 +43,11 @@ def main():
     c_hidden_units = in_args.hidden_units
     c_use_gpu = in_args.gpu
 
-    print("Data Dir: {}, Save dir: {}, Arch: {}, LR: {}, Epochs: {}, H Units: {}, GPU: {}".format(c_data_dir, c_save_dir, c_arch,
+    print()
+    print("Starting train.py with the following hyper-parameters: ")
+    print("Data Dir: {}\nSave dir: {}\nArch: {}\nLR: {}\nEpochs: {}\nHidden Units: {}\nGPU: {}\n".format(c_data_dir, c_save_dir, c_arch,
         c_learning_rate, c_num_epochs, c_hidden_units, c_use_gpu))
+    print()
 
     # get the data transforms:
     image_datasets, dataloaders = dl.load_data(c_data_dir, img_px, mean, std, batch_size)
@@ -69,8 +72,9 @@ def main():
     # print("Criterion: ", criterion)
     # print("Optimizer: ", optimizer)
 
+    print("========================================")
     # Now we can train and evaluate
-    model_ft = train_model(c_arch, model_ft, device, dataloaders, criterion, optimizer, num_epochs=c_num_epochs)
+    model_ft = train_model(model_ft, device, dataloaders, criterion, optimizer, c_num_epochs)
 
     # Check accuracy on test data
     # check_accuracy_on_test(model_ft, device, dataloaders['test'])
@@ -79,12 +83,12 @@ def main():
     cm.save_model(model_ft, num_classes, image_datasets['train'].class_to_idx, c_arch, 
         c_hidden_units, c_learning_rate, dropout, c_save_dir)
 
-def train_model(arch, model, device, dataloaders, criterion, optimizer, num_epochs=25):
-    
-    print("Starting training with: ", arch)
-    
+def train_model(model, device, dataloaders, criterion, optimizer, num_epochs=25):
+    """Train the network."""    
     since = time.time()
 
+    model.to(device)
+    
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
 
@@ -92,26 +96,34 @@ def train_model(arch, model, device, dataloaders, criterion, optimizer, num_epoc
         print('Epoch {}/{}'.format(epoch + 1, num_epochs))
         print('-' * 10)
 
-        # Each epoch has a training and validation phase
+        # For each epoch, we will go through a training and 
+        # validating phase. We will display the loss and
+        # accuracy for each.
         for phase in ['train', 'valid']:
+            
+            # check what phase we are in and set
+            # the model to training or evaluate mode
             if phase == 'train':
-                model.train()  # Set model to training mode
+                model.train()
             else:
-                model.eval()   # Set model to evaluate mode
+                model.eval()
 
+            # reset running loss and running corrects
             running_loss = 0.0
             running_corrects = 0
 
-            # Iterate over data.
+            # Iterate over train or valid data (depends on
+            # the phase that we are in)
             for inputs, labels in dataloaders[phase]:
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
-                # zero the parameter gradients
+                # clear the gradients, since they are
+                # accumulated
                 optimizer.zero_grad()
 
-                # forward
-                # track history if only in train
+                # forward pass through the network
+                # turn gradients on only for the training phase
                 with torch.set_grad_enabled(phase == 'train'):
                     # Get model outputs and calculate loss
                     outputs = model(inputs)
@@ -119,27 +131,34 @@ def train_model(arch, model, device, dataloaders, criterion, optimizer, num_epoc
 
                     _, preds = torch.max(outputs, 1)
 
-                    # backward + optimize only if in training phase
+                    # backpropagation and optimize 
+                    # only if in training phase
                     if phase == 'train':
                         loss.backward()
+                        # update the weights
                         optimizer.step()
 
-                # statistics
+                # get statistics
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
-
+            
+            # calculate the loss and accuracy for current epoch phase
             epoch_loss = running_loss / len(dataloaders[phase].dataset)
             epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
 
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
 
             # deep copy the model
+            # in other words, we store the best model
+            # only if we get a better validation accuracy
+            # than in the previous epoch
             if phase == 'valid' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(model.state_dict())
 
         print()
 
+    # print training complete stats
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
     print('Best val Acc: {:4f}'.format(best_acc))
