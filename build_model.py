@@ -6,20 +6,10 @@ import numpy as np
 import torch
 from torch import nn
 from torch import optim
-import torch.nn.functional as F
 import torchvision
 from torchvision import datasets, transforms, models, utils
-from torch.autograd import Variable
-from torch.optim import lr_scheduler
 
-import time
-import os
-import copy
 from collections import OrderedDict
-import json
-
-import random
-from PIL import Image
 
 def setup_criterion_optim(model_ft, device, learning_rate):
     model_ft = model_ft.to(device)
