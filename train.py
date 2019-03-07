@@ -73,7 +73,7 @@ def main():
     model_ft = train_model(c_arch, model_ft, device, dataloaders, criterion, optimizer, num_epochs=c_num_epochs)
 
     # Check accuracy on test data
-    check_accuracy_on_test(model_ft, device, dataloaders['test'])
+    # check_accuracy_on_test(model_ft, device, dataloaders['test'])
 
     # Save the model
     cm.save_model(model_ft, num_classes, image_datasets['train'].class_to_idx, c_arch, 
