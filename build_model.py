@@ -11,12 +11,9 @@ from torchvision import datasets, transforms, models, utils
 
 from collections import OrderedDict
 
-def setup_criterion_optim(model_ft, device, learning_rate):
-    model_ft = model_ft.to(device)
-    params_to_update = model_ft.parameters()
-    
+def setup_criterion_optim(model_ft, device, learning_rate):    
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(params_to_update, lr=learning_rate, momentum=0.9)
+    optimizer = optim.SGD(model_ft.classifier.parameters(), lr=learning_rate)
     
     return criterion, optimizer
 
@@ -28,22 +25,7 @@ def initialize_model(model_name, num_classes, hidden_units, c_drop):
 
     model_ft = None
 
-    if model_name == "resnet":
-
-        model_ft = models.resnet50(pretrained=True)
-        set_parameter_requires_grad(model_ft)
-
-        num_ftrs = model_ft.fc.in_features
-        
-        model_ft.fc =  nn.Sequential(OrderedDict([
-                          ('fc1', nn.Linear(num_ftrs, hidden_units)),
-                          ('drop', nn.Dropout(c_drop)),
-                          ('relu', nn.ReLU()),
-                          ('fc2', nn.Linear(hidden_units, num_classes)),
-                          ('output', nn.LogSoftmax(dim=1))
-                          ]))
-        
-    elif model_name == "alexnet":
+    if model_name == "alexnet":
 
         model_ft = models.alexnet(pretrained=True)
         
