@@ -4,6 +4,7 @@ import numpy as np
 import torch
 import torchvision
 from torchvision import models, utils
+import torch.nn.functional as F
 
 import helpers as hlp
 import checkpoint_manager
@@ -11,6 +12,7 @@ import checkpoint_manager
 from get_input_args import get_input_args_predict
 
 def main():
+    
     # command line arguments
     c_img_path = None
     c_chk_path = None
@@ -18,28 +20,35 @@ def main():
     c_mapping_path = None
     c_use_gpu = False
 
+    # Get command line arguments
     in_args = get_input_args_predict()
 
-    # Get command line arguments
     c_img_path = in_args.img_path
     c_chk_path = in_args.checkpoint
     c_top_k = in_args.top_k
     c_mapping_path = in_args.category_names
     c_use_gpu = in_args.gpu
 
-    #print("Image Path: {}, Checkpoint: {}, Top K: {}, Mapping: {}, GPU: {}".format(c_img_path, c_chk_path, c_top_k,
-    #    c_mapping_path, c_use_gpu))
+    print("Running predict.py with the following arguments: ")
+    print("Image Path: {}\nCheckpoint: {}\nTop K: {}\nMapping: {}\nGPU: {}".format(c_img_path, c_chk_path, c_top_k,
+        c_mapping_path, c_use_gpu))
 
+    # load the checkpoint
     model = checkpoint_manager.load_checkpoint(c_chk_path)
 
+    # set the device (gpu or cpu)
     device = torch.device("cuda" if torch.cuda.is_available() and c_use_gpu else "cpu")
 
+    # call the predict function and get the topK (c_top_k) classes and probabilities 
     probs, classes = predict(c_img_path, model, device, c_top_k)
 
+    # check to see if we want to map the classes to the category names (one of the command
+    # line arguments)
     if c_mapping_path is not None:
         cat_to_name = hlp.open_label_mapping_file(c_mapping_path)
         classes = map_cat_to_real_names(model, classes, cat_to_name)
 
+    # print the results
     print_results(probs, classes)
 
 def predict(image_path, model, device, topk):
@@ -47,41 +56,48 @@ def predict(image_path, model, device, topk):
     '''
     # set the mode for inference
     model.eval()
+    
+    # set the device
     model.to(device)
     
     # process the image
-    image = hlp.process_image(image_path);
+    image = hlp.process_image(image_path)
     image = np.expand_dims(image, 0)
     
     img_to_fwd = torch.from_numpy(image)
     img_to_fwd = img_to_fwd.to(device)
     
-    # Calculate the class probabilities (softmax) for img
+    # Turn off gradients to speed up this part
     with torch.no_grad():
+        # fwd pass get logits
         output = model.forward(img_to_fwd)
 
-    ps = torch.exp(output)
-    
-    probs, classes = ps.topk(topk)
+    # Calculate the class probabilities for img
+    # ps = torch.exp(output)
+    # Calculate the class probabilities (softmax) for img
+    ps = F.softmax(output, dim=1)
+    # get the top K largest values
+    probs, classes = ps.topk(5)
     
     # probs and classes are tensors, so we convert to lists so we return
     # as is required
     top_probs = probs.cpu().detach().numpy().tolist()[0]
     top_classes = classes.cpu().detach().numpy().tolist()[0]
     
+    # I was getting the wrong class labels when converting,
+    # the solution in the following helped me:
     # https://knowledge.udacity.com/questions/31597
     idx_to_class = {val: key for key, val in model.class_to_idx.items()}
     
     classes = []
     
+    # convert the classes using idx_to_class
     for cls in top_classes:
         c = idx_to_class[cls]
         classes.append(c)
     
-    # top classes are not strings, so we just convert
+    # return the 
     return top_probs, classes
-
-    # Call to main function to run the program
 
 def map_cat_to_real_names(model, classes, cat_to_name):
     labels = []

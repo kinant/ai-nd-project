@@ -33,6 +33,7 @@ def main():
     img_px = 224
     num_classes = None
 
+    # get command line arguments
     in_args = get_input_args()
 
     c_data_dir = in_args.data_dir
@@ -56,13 +57,15 @@ def main():
     # print("Image_datasets: ", image_datasets)
     # print("dataloaders: ", dataloaders)
 
-    # Initialize the model:
+    # get the number of classes (output size)
     _, _, num_classes = dl.get_data_info(image_datasets)
 
+    # Initialize the model:
     model_ft = bm.initialize_model(c_arch, num_classes, c_hidden_units, dropout)
 
     # print("Model: ", model_ft)
 
+    # set up the device (gpu or cpu)
     device = torch.device("cuda:0" if torch.cuda.is_available() and c_use_gpu else "cpu")
     # print("Device: ", device)
 
@@ -73,7 +76,7 @@ def main():
     # print("Optimizer: ", optimizer)
 
     print("========================================")
-    # Now we can train and evaluate
+    # Now we train
     model_ft = train_model(model_ft, device, dataloaders, criterion, optimizer, c_num_epochs)
 
     # Check accuracy on test data
@@ -83,7 +86,7 @@ def main():
     cm.save_model(model_ft, num_classes, image_datasets['train'].class_to_idx, c_arch, 
         c_hidden_units, c_learning_rate, dropout, c_save_dir)
 
-def train_model(model, device, dataloaders, criterion, optimizer, num_epochs=25):
+def train_model(model, device, dataloaders, criterion, optimizer, num_epochs):
     """Train the network."""    
     since = time.time()
 

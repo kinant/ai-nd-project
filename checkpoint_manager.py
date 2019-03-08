@@ -7,7 +7,7 @@ import os
 
 def save_model(model, num_classes, class_to_idx_mapping, c_arch, hidden_units,
     learning_rate, dropout, path):
-    #model.class_to_idx = image_datasets['train'].class_to_idx
+
     model.class_to_idx = class_to_idx_mapping
     m_state_dict = model.state_dict()
 
@@ -31,8 +31,9 @@ def save_model(model, num_classes, class_to_idx_mapping, c_arch, hidden_units,
     print('Model saved!')
 
 def load_checkpoint(path):
-    # load parameters
+    # load checkpoint
     checkpoint = torch.load(path)
+    # load parameters
     num_classes = checkpoint['output_size']
     c_arch = checkpoint['choice_model']
     dropout = checkpoint['dropout']
