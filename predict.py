@@ -51,7 +51,7 @@ def main():
     # line arguments)
     if c_mapping_path is not None:
         cat_to_name = hlp.open_label_mapping_file(c_mapping_path)
-        classes = map_cat_to_real_names(model, classes, cat_to_name)
+        classes = map_cat_to_real_names(classes, cat_to_name)
 
     # print the results
     print_results(probs, classes)
