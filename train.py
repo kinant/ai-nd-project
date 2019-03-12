@@ -73,7 +73,7 @@ def main():
     # print("Device: ", device)
 
     # get criterion and optimizer
-    criterion, optimizer = bm.setup_criterion_optim(model_ft, device, c_learning_rate)
+    criterion, optimizer = bm.setup_criterion_optim(model_ft, c_learning_rate)
 
     # print("Criterion: ", criterion)
     # print("Optimizer: ", optimizer)
