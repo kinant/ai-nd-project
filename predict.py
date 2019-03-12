@@ -93,7 +93,7 @@ def predict(image_path, model, device, topk):
     # Calculate the class probabilities (softmax) for img
     ps = F.softmax(output, dim=1)
     # get the top K largest values
-    probs, classes = ps.topk(5)
+    probs, classes = ps.topk(topk)
     
     # probs and classes are tensors, so we convert to lists so we return
     # as is required
