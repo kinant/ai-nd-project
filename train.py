@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# PROGRAMMER: Kinan Turman
+# DATE CREATED: Feb. 23, 2019                       
+# PURPOSE: Train a new network on a data set
 
 from get_input_args import get_input_args
 import data_loader as dl
@@ -87,7 +90,23 @@ def main():
         c_hidden_units, c_learning_rate, dropout, c_save_dir)
 
 def train_model(model, device, dataloaders, criterion, optimizer, num_epochs):
-    """Train the network."""    
+    """
+        Trains the network. For this function, I followed what was learned in class,
+        as well as the following official tutorials: 
+        - https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html#model-training-and-validation-code
+        - https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html#training-the-model
+
+        Parameters:
+        - model: the model to be used for training
+        - device: device to be used for training (gpu or cpu)
+        - dataloaders: our image data set dataloaders
+        - criterion: the criterion to be used
+        - optimizer: the optimizer to be used
+        - num_epochs: the number of epochs to run the training for
+
+        Returns:
+        - model_ft: the model with the best weights (ie. the best valid accuracy)
+    """   
     since = time.time()
 
     model.to(device)
@@ -171,6 +190,18 @@ def train_model(model, device, dataloaders, criterion, optimizer, num_epochs):
     return model
 
 def check_accuracy_on_test(model, device, testloader):    
+    """
+        Checks the accuracy of our network on the test set.
+        Slightly modified from the course notebook: Part8-TransferLearningSolution.ipynb
+
+        Parameters:
+        - model: the model that was trained
+        - device: device to use (cpu or gpu)
+        - testloader: the dataloader with the test dataset
+
+        Returns:
+        - None
+    """
     correct = 0
     total = 0
     model.to(device)

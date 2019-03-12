@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# PROGRAMMER: Kinan Turman
+# DATE CREATED: Feb. 23, 2019                       
+# PURPOSE: Helper functions, one for opening a .json file for class id to name mapping.
+# The other helper function is the image process function, which processes
+# an image into a PyTorch tensor.
+
 import numpy as np
 import torch
 
@@ -7,6 +13,15 @@ import json
 from PIL import Image
 
 def open_label_mapping_file(filename):
+    """
+        This function loads in a mapping from category label to category name
+
+        Parameters:
+        - filename: the .json file to be read with the mapping
+
+        Returns:
+        - cat_to_name: dictionary mapping the integer encoded categories to the actual names of the flowers.
+    """
     cat_to_name = None
     
     with open('cat_to_name.json', 'r') as f:

@@ -1,9 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# PROGRAMMER: Kinan Turman
+# DATE CREATED: Feb. 23, 2019                       
+# PURPOSE: Use ArgumentParser to get command line arguments for both train.py and
+# predict.py
 
 import argparse
 
 def get_input_args():
+    """
+        This function sets up the input arguments for the train.py command
+        line app. 
+
+        Parameters:
+        - None
+
+        Returns:
+        - returns the parsed args from the parser
+    """
 
     # Create Parse using Argument Parser
     parser = argparse.ArgumentParser()
@@ -37,6 +51,16 @@ def get_input_args():
     return parser.parse_args()
 
 def get_input_args_predict():
+    """
+        This function sets up the input arguments for the predict.py command
+        line app. 
+
+        Parameters:
+        - None
+
+        Returns:
+        - returns the parsed args from the parser
+    """
     # Create Parse using Argument Parser
     parser = argparse.ArgumentParser()
 

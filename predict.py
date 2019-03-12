@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# PROGRAMMER: Kinan Turman
+# DATE CREATED: Feb. 23, 2019                       
+# PURPOSE: Predict flower name from an image with predict.py along with the probability of that name. 
+# Can also predict the Top K classes and use category name mapping to show the real names. 
+
 import numpy as np
 import torch
 import torchvision
@@ -52,8 +57,19 @@ def main():
     print_results(probs, classes)
 
 def predict(image_path, model, device, topk):
-    ''' Predict the class (or classes) of an image using a trained deep learning model.
-    '''
+    """
+        Predict the class (or classes) of an image using a trained deep learning model.
+
+        Parameters:
+        - image_path: path to the image for which we will predict the class(es)
+        - model: the model to be used
+        - device to be used: gpu or cpu
+        - topk: the number of K most likely classes we want to calculate/return
+
+        Returns:
+        - top_probs: the top probabilities
+        - classes: the top classes
+    """
     # set the mode for inference
     model.eval()
     
@@ -99,7 +115,17 @@ def predict(image_path, model, device, topk):
     # return the 
     return top_probs, classes
 
-def map_cat_to_real_names(model, classes, cat_to_name):
+def map_cat_to_real_names(classes, cat_to_name):
+    """
+        Maps class categories to real names
+
+        Parameters:
+        - classes: the classes (list of ids)
+        - cat_to_name: dictionary mapping the integer encoded categories to the actual names of the flowers
+
+        Returns:
+        - labels: the classes mapped to their actual names
+    """
     labels = []
     
     for cls in classes:
@@ -108,6 +134,16 @@ def map_cat_to_real_names(model, classes, cat_to_name):
     return labels
 
 def print_results(probs, classes):
+    """
+        Prints the results of predict.py
+
+        Parameters:
+        - probs: the probabilities to print
+        - classes: the classes to print
+
+        Returns:
+        - None
+    """
     print()
     print("Prediction Results: ")
     print("=================================")

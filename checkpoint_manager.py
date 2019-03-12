@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# PROGRAMMER: Kinan Turman
+# DATE CREATED: Feb. 23, 2019                       
+# PURPOSE: A basic manager for saving and loading checkpoints. Used by train.py to save
+# a checkpoint and by predict.py to load a checkpoint/model to predict the classes for 
+# a given image.
+
 import torch
 import build_model as bm
 import torchvision
@@ -7,6 +15,23 @@ import os
 
 def save_model(model, num_classes, class_to_idx_mapping, c_arch, hidden_units,
     learning_rate, dropout, path):
+
+    """
+        This function saves the checkpoint
+
+        Parameters:
+        - model: the model we are saving (using state_dict())
+        - num_classes: the output size
+        - class_to_idx_mapping: the mapping of classes to indices which we get from the test set
+        - c_arch: the choice of architecture
+        - hidden_units: hidden units
+        - learning_rate: the learning rate
+        - dropout: the dropout
+        - path: where we want to save the checkpoint
+
+        Returns:
+        - None
+    """
 
     model.class_to_idx = class_to_idx_mapping
     m_state_dict = model.state_dict()
@@ -31,6 +56,16 @@ def save_model(model, num_classes, class_to_idx_mapping, c_arch, hidden_units,
     print('Model saved!')
 
 def load_checkpoint(path):
+    """
+        This loads a checkpoint
+
+        Parameters:
+        - path: path to the checkpoint (dir + filename)
+
+        Returns:
+        - None
+    """
+
     # load checkpoint
     checkpoint = torch.load(path)
     # load parameters
