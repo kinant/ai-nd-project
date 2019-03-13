@@ -10,6 +10,7 @@ import numpy as np
 import torch
 
 import json
+from math import floor
 from PIL import Image
 
 def open_label_mapping_file(filename):
@@ -24,7 +25,7 @@ def open_label_mapping_file(filename):
     """
     cat_to_name = None
     
-    with open('cat_to_name.json', 'r') as f:
+    with open(filename, 'r') as f:
         cat_to_name = json.load(f)
     
     return cat_to_name
@@ -35,13 +36,42 @@ def process_image(image_path):
     # open the image
     image = Image.open(image_path)
     
-    # Resize the image
-    image = image.resize((256, 256))
+    # print("Original Image size: ", image.size)
+    
+    # first resize the images where the shortest side is 256 px
+    width, height = image.size
+    size = 256, 256
+    
+    newwidth, newheight = None, None
+    
+    # if the height is the shorter side
+    if height < width:
+        # find ratio between larger and smaller side
+        ratio = float(width) / float(height)
+        # resize smaller side to 256
+        newheight = 256
+        # resize larger side to 256 * ratio
+        newwidth = int(floor(ratio * size[1]))  
+    # else, the width is the shorter side
+    else:
+        # find ratio between larger and smaller side
+        ratio = float(height)/float(width)
+        # resize smaller side to 256
+        newwidth = 256
+        # resize larger side to 256 * ratio
+        newheight = int(floor(ratio * size[0]))
+    
+    
+    # print("W: {}, H: {}".format(newwidth, newheight))
+    
+    # resize the image
+    image = image.resize((newwidth, newheight), Image.ANTIALIAS)
 
+    # print("Resized Image (keep aspect ratio): ", image.size)
+    
     # perform center crop
     # https://stackoverflow.com/questions/16646183/crop-an-image-in-the-centre-using-pil
     width, height = image.size   # Get dimensions
-    # print("image size 1: ", image.size)
     new_height, new_width = 224, 224
     
     left = (width - new_width)/2
@@ -50,7 +80,7 @@ def process_image(image_path):
     bottom = (height + new_height)/2
 
     image = image.crop((left, top, right, bottom))
-    # print("image size 2: ", image.size)
+    # print("cropped image size: ", image.size)
     
     # convert encoded color channels and convert to floats (divide by 255)
     np_image = np.array(image) / 255
