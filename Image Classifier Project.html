@@ -12902,7 +12902,7 @@ Part8-TransferLearningSolution Jupyter Notebook included with the class.</p>
         <span class="c1"># resize smaller side to 256</span>
         <span class="n">newheight</span> <span class="o">=</span> <span class="mi">256</span>
         <span class="c1"># resize larger side to 256 * ratio</span>
-        <span class="n">newwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">ratio</span> <span class="o">*</span> <span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>  
+        <span class="n">newwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">ratio</span> <span class="o">*</span> <span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>  
     <span class="c1"># else, the width is the shorter side</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># find ratio between larger and smaller side</span>
@@ -12910,7 +12910,7 @@ Part8-TransferLearningSolution Jupyter Notebook included with the class.</p>
         <span class="c1"># resize smaller side to 256</span>
         <span class="n">newwidth</span> <span class="o">=</span> <span class="mi">256</span>
         <span class="c1"># resize larger side to 256 * ratio</span>
-        <span class="n">newheight</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">ratio</span> <span class="o">*</span> <span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">newheight</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">ratio</span> <span class="o">*</span> <span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
     
     
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;W: </span><span class="si">{}</span><span class="s2">, H: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">newwidth</span><span class="p">,</span> <span class="n">newheight</span><span class="p">))</span>

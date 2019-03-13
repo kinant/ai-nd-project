@@ -51,7 +51,7 @@ def process_image(image_path):
         # resize smaller side to 256
         newheight = 256
         # resize larger side to 256 * ratio
-        newwidth = int(floor(ratio * size[1]))  
+        newwidth = int(floor(ratio * size[0]))  
     # else, the width is the shorter side
     else:
         # find ratio between larger and smaller side
@@ -59,7 +59,7 @@ def process_image(image_path):
         # resize smaller side to 256
         newwidth = 256
         # resize larger side to 256 * ratio
-        newheight = int(floor(ratio * size[0]))
+        newheight = int(floor(ratio * size[1]))
     
     
     # print("W: {}, H: {}".format(newwidth, newheight))
